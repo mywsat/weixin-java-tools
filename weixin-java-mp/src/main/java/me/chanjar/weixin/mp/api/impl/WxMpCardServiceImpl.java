@@ -1,9 +1,6 @@
 package me.chanjar.weixin.mp.api.impl;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import me.chanjar.weixin.common.bean.WxCardApiSignature;
 import me.chanjar.weixin.common.bean.result.WxError;
@@ -235,5 +232,23 @@ public class WxMpCardServiceImpl implements WxMpCardService {
     }
 
     return responseContent;
+  }
+
+  @Override
+  public String getCardCode(String cardId, String openId) throws WxErrorException {
+    JsonObject param = new JsonObject();
+    param.addProperty("card_id", cardId);
+    param.addProperty("openid",openId);
+    String responseContent = this.wxMpService.post(CARD_USER_GET, param.toString());
+    JsonElement tmpJsonElement = new JsonParser().parse(responseContent);
+    JsonObject obj = tmpJsonElement.getAsJsonObject();
+    JsonArray card_list = obj.getAsJsonArray("card_list");
+    for(JsonElement card:card_list){
+      JsonObject cardObject = card.getAsJsonObject();
+      if(cardObject.get("card_id").getAsString().equals(cardId)){
+        return cardObject.get("code").getAsString();
+      }
+    }
+    return null;
   }
 }

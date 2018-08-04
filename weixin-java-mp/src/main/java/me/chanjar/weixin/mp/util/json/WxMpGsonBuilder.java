@@ -9,6 +9,7 @@ import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUpdateResult;
 import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUserInfoResult;
 import me.chanjar.weixin.mp.bean.material.*;
+import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUserInfoTicketResult;
 import me.chanjar.weixin.mp.bean.result.*;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateIndustry;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
@@ -53,6 +54,7 @@ public class WxMpGsonBuilder {
     INSTANCE.registerTypeAdapter(WxMpUserBlacklistGetResult.class, new WxUserBlacklistGetResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardUserInfoResult.class, new WxMpMemberCardUserInfoResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardUpdateResult.class, new WxMpMemberCardUpdateResultGsonAdapter());
+    INSTANCE.registerTypeAdapter(WxMpMemberCardUserInfoTicketResult.class, new WxMpMemberCardUserInfoTicketResultGsonAdapter());
   }
 
   public static Gson create() {

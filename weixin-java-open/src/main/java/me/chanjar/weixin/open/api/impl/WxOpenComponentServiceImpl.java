@@ -187,8 +187,18 @@ public class WxOpenComponentServiceImpl implements WxOpenComponentService {
       jsonObject.addProperty("component_appid", getWxOpenConfigStorage().getComponentAppId());
       jsonObject.addProperty("authorizer_appid", appId);
       jsonObject.addProperty("authorizer_refresh_token", getWxOpenConfigStorage().getAuthorizerRefreshToken(appId));
-      String responseContent = post(API_AUTHORIZER_TOKEN_URL, jsonObject.toString());
-
+      String responseContent =null;
+      try {
+         responseContent = post(API_AUTHORIZER_TOKEN_URL, jsonObject.toString());
+      }catch (WxErrorException e) {
+        if (e.getError().getErrorCode() == 61023) {
+          WxOpenAuthorizerInfoResult authorizerInfo = this.getAuthorizerInfo(appId);
+          getWxOpenConfigStorage().setAuthorizerRefreshToken(appId, authorizerInfo.getAuthorizationInfo().getAuthorizerRefreshToken());
+          return getAuthorizerAccessToken(appId,false);
+        } else {
+          throw e;
+        }
+      }
       WxOpenAuthorizerAccessToken wxOpenAuthorizerAccessToken = WxOpenAuthorizerAccessToken.fromJson(responseContent);
       getWxOpenConfigStorage().updateAuthorizerAccessToken(appId, wxOpenAuthorizerAccessToken);
     }

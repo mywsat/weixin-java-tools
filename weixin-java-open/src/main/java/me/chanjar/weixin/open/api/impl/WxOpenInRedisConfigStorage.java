@@ -146,14 +146,14 @@ public class WxOpenInRedisConfigStorage extends WxOpenInMemoryConfigStorage {
   @Override
   public void updateJsapiTicket(String appId, String jsapiTicket, int expiresInSeconds) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.setex(getKey(jsapiTicketKey, appId), expiresInSeconds - 200, jsapiTicket);
+      jedis.setex(getKey(this.jsapiTicketKey, appId), expiresInSeconds - 200, jsapiTicket);
     }
   }
 
   @Override
   public String getCardApiTicket(String appId) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      return jedis.get(getKey(jsapiTicketKey, appId));
+      return jedis.get(getKey(cardApiTicket, appId));
     }
   }
 
@@ -167,14 +167,14 @@ public class WxOpenInRedisConfigStorage extends WxOpenInMemoryConfigStorage {
   @Override
   public void expireCardApiTicket(String appId) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.expire(getKey(cardApiTicket, appId), 0);
+      jedis.expire(getKey(this.cardApiTicket, appId), 0);
     }
   }
 
   @Override
   public void updateCardApiTicket(String appId, String cardApiTicket, int expiresInSeconds) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.setex(getKey(cardApiTicket, appId), expiresInSeconds - 200, cardApiTicket);
+      jedis.setex(getKey(this.cardApiTicket, appId), expiresInSeconds - 200, cardApiTicket);
     }
   }
 }

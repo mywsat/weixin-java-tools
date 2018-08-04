@@ -64,7 +64,7 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
   @Override
   public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data) {
     try {
-      return SHA1.gen(this.configStorage.getToken(), timestamp, nonce, data)
+      return SHA1.gen(getWxCpConfigStorage().getToken(), timestamp, nonce, data)
         .equals(msgSignature);
     } catch (Exception e) {
       this.log.error("Checking signature failed, and the reason is :" + e.getMessage());
@@ -86,23 +86,23 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
   @Override
   public String getJsapiTicket(boolean forceRefresh) throws WxErrorException {
     if (forceRefresh) {
-      this.configStorage.expireJsapiTicket();
+      getWxCpConfigStorage().expireJsapiTicket();
     }
-    if (this.configStorage.isJsapiTicketExpired()) {
+    if (getWxCpConfigStorage().isJsapiTicketExpired()) {
       synchronized (this.globalJsapiTicketRefreshLock) {
-        if (this.configStorage.isJsapiTicketExpired()) {
+        if (getWxCpConfigStorage().isJsapiTicketExpired()) {
           String url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket";
           String responseContent = execute(SimpleGetRequestExecutor.create(this), url, null);
           JsonElement tmpJsonElement = new JsonParser().parse(responseContent);
           JsonObject tmpJsonObject = tmpJsonElement.getAsJsonObject();
           String jsapiTicket = tmpJsonObject.get("ticket").getAsString();
           int expiresInSeconds = tmpJsonObject.get("expires_in").getAsInt();
-          this.configStorage.updateJsapiTicket(jsapiTicket,
+          getWxCpConfigStorage().updateJsapiTicket(jsapiTicket,
             expiresInSeconds);
         }
       }
     }
-    return this.configStorage.getJsapiTicket();
+    return getWxCpConfigStorage().getJsapiTicket();
   }
 
   @Override
@@ -123,7 +123,7 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
     jsapiSignature.setSignature(signature);
 
     // Fixed bug
-    jsapiSignature.setAppId(this.configStorage.getCorpId());
+    jsapiSignature.setAppId(getWxCpConfigStorage().getCorpId());
 
     return jsapiSignature;
   }
@@ -403,7 +403,7 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
        */
       if (error.getErrorCode() == 42001 || error.getErrorCode() == 40001 || error.getErrorCode() == 40014) {
         // 强制设置wxCpConfigStorage它的access token过期了，这样在下一次请求里就会刷新access token
-        this.configStorage.expireAccessToken();
+        getWxCpConfigStorage().expireAccessToken();
         return execute(executor, uri, data);
       }
 

@@ -1,10 +1,7 @@
 package me.chanjar.weixin.mp.api;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardActivatedMessage;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUpdateMessage;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUpdateResult;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUserInfoResult;
+import me.chanjar.weixin.mp.bean.membercard.*;
 
 /**
  * 会员卡相关接口
@@ -38,6 +35,15 @@ public interface WxMpMemberCardService {
    */
   WxMpMemberCardUserInfoResult getUserInfo(String cardId, String code) throws WxErrorException;
 
+
+  /**
+   * 拉取会员提交的信息接口
+   *
+   * @param ticket 会员卡的CardId，微信分配
+   * @return 会员信息的结果对象
+   * @throws WxErrorException 接口调用失败抛出的异常
+   */
+  WxMpMemberCardUserInfoTicketResult getUserInfo(String ticket) throws WxErrorException;
   /**
    * 当会员持卡消费后，支持开发者调用该接口更新会员信息。会员卡交易后的每次信息变更需通过该接口通知微信，便于后续消息通知及其他扩展功能。
    *
@@ -50,4 +56,15 @@ public interface WxMpMemberCardService {
    * @throws WxErrorException 接口调用失败抛出的异常
    */
   WxMpMemberCardUpdateResult updateUserMemberCard(WxMpMemberCardUpdateMessage updateUserMessage) throws WxErrorException;
+
+  /**
+   *
+   * @param wxMpMemberCardAddMessage
+   * @return
+   * @throws WxErrorException
+   */
+  WxMpMemberCardAddResult addMemberCard(WxMpMemberCardAddMessage wxMpMemberCardAddMessage) throws WxErrorException;
+  String activityCardInfoSet( String msg) throws WxErrorException;
+  WxMpMemberCardGetUrlResult getQuickCctivityCardURL(String cardId,String outer_str) throws WxErrorException;
+  WxMpMemberCardAddResult addMemberCard(String msg) throws WxErrorException;
 }

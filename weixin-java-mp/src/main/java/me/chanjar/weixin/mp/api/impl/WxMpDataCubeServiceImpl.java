@@ -132,4 +132,25 @@ public class WxMpDataCubeServiceImpl implements WxMpDataCubeService {
     String responseContent = this.wxMpService.post(GET_INTERFACE_SUMMARY_HOUR, buildParams(beginDate, endDate));
     return WxDataCubeInterfaceResult.fromJson(responseContent);
   }
+
+  @Override
+  public List<WxDataCubeCardResult> getInterfaceSummaryCard(Date beginDate, Date endDate, int cond_source, String card_id) throws WxErrorException {
+    JsonObject param = new JsonObject();
+    param.addProperty("begin_date", this.dateFormat.format(beginDate));
+    param.addProperty("end_date", this.dateFormat.format(endDate));
+    param.addProperty("cond_source", cond_source);
+    param.addProperty("card_id", card_id);
+    String responseContent = this.wxMpService.post(GET_CARD_CARD_INFO, param.toString());
+    return WxDataCubeCardResult.fromJson(responseContent);
+  }
+
+  @Override
+  public List<WxDataCubeCardMemberResult> getInterfaceSummaryMemberCard(Date beginDate, Date endDate, String card_id) throws WxErrorException {
+    JsonObject param = new JsonObject();
+    param.addProperty("begin_date", this.dateFormat.format(beginDate));
+    param.addProperty("end_date", this.dateFormat.format(endDate));
+    param.addProperty("card_id", card_id);
+    String responseContent = this.wxMpService.post(GET_MEMBER_CARD_DETAIL, param.toString());
+    return WxDataCubeCardMemberResult.fromJson(responseContent);
+  }
 }

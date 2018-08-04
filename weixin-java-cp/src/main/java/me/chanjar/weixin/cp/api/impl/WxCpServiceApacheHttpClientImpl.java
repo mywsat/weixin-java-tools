@@ -76,19 +76,19 @@ public class WxCpServiceApacheHttpClientImpl extends WxCpServiceAbstractImpl<Clo
 
   @Override
   public void initHttp() {
-    ApacheHttpClientBuilder apacheHttpClientBuilder = this.configStorage
-      .getApacheHttpClientBuilder();
+    WxCpConfigStorage wxCpConfigStorage = getWxCpConfigStorage();
+    ApacheHttpClientBuilder apacheHttpClientBuilder = wxCpConfigStorage.getApacheHttpClientBuilder();
     if (null == apacheHttpClientBuilder) {
       apacheHttpClientBuilder = DefaultApacheHttpClientBuilder.get();
     }
 
-    apacheHttpClientBuilder.httpProxyHost(this.configStorage.getHttpProxyHost())
-      .httpProxyPort(this.configStorage.getHttpProxyPort())
-      .httpProxyUsername(this.configStorage.getHttpProxyUsername())
-      .httpProxyPassword(this.configStorage.getHttpProxyPassword());
+    apacheHttpClientBuilder.httpProxyHost(wxCpConfigStorage.getHttpProxyHost())
+      .httpProxyPort(wxCpConfigStorage.getHttpProxyPort())
+      .httpProxyUsername(wxCpConfigStorage.getHttpProxyUsername())
+      .httpProxyPassword(wxCpConfigStorage.getHttpProxyPassword());
 
-    if (this.configStorage.getHttpProxyHost() != null && this.configStorage.getHttpProxyPort() > 0) {
-      this.httpProxy = new HttpHost(this.configStorage.getHttpProxyHost(), this.configStorage.getHttpProxyPort());
+    if (wxCpConfigStorage.getHttpProxyHost() != null && wxCpConfigStorage.getHttpProxyPort() > 0) {
+      this.httpProxy = new HttpHost(wxCpConfigStorage.getHttpProxyHost(), wxCpConfigStorage.getHttpProxyPort());
     }
 
     this.httpClient = apacheHttpClientBuilder.build();

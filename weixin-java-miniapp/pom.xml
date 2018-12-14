@@ -7,10 +7,10 @@
   <parent>
     <groupId>com.github.binarywang</groupId>
     <artifactId>weixin-java-parent</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.0-wsat</version>
   </parent>
   <artifactId>weixin-java-miniapp</artifactId>
-  <name>Weixin Java Tools - MiniApp</name>
+  <name>WeiXin Java Tools - MiniApp</name>
   <description>微信小程序Java SDK</description>
 
   <dependencies>

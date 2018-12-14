@@ -16,7 +16,7 @@ public interface WxMpCardService {
   String CARD_CODE_GET = "https://api.weixin.qq.com/card/code/get";
   String CARD_CODE_CONSUME = "https://api.weixin.qq.com/card/code/consume";
   String CARD_CODE_MARK = "https://api.weixin.qq.com/card/code/mark";
-
+  String CARD_USER_GET = "https://api.weixin.qq.com/card/user/getcardlist";
   /**
    * 得到WxMpService
    */
@@ -122,4 +122,15 @@ public interface WxMpCardService {
    * <br> 可由 com.google.gson.JsonParser#parse 等方法直接取JSON串中的某个字段。
    */
   String getCardDetail(String cardId) throws WxErrorException;
+  /**
+   * 查看卡券详情接口
+   * 详见 https://mp.weixin.qq.com/wiki/14/8dd77aeaee85f922db5f8aa6386d385e.html#.E6.9F.A5.E7.9C.8B.E5.8D.A1.E5.88.B8.E8.AF.A6.E6.83.85
+   *
+   * @param cardId 卡券的ID
+   * @param openId 用户的ID
+   * @return 返回的卡券详情JSON字符串
+   * <br> [注] 由于返回的JSON格式过于复杂，难以定义其对应格式的Bean并且难以维护，因此只返回String格式的JSON串。
+   * <br> 可由 com.google.gson.JsonParser#parse 等方法直接取JSON串中的某个字段。
+   */
+  String getCardCode(String cardId,String openId) throws WxErrorException;
 }

@@ -272,7 +272,7 @@ public class WxCryptUtil {
 
     // appid不相同的情况
     if (!from_appid.equals(this.appidOrCorpid)) {
-      throw new RuntimeException("AppID不正确");
+      throw new RuntimeException("AppID不正确"+from_appid+"会的到认证的appid"+this.appidOrCorpid);
     }
 
     return xmlContent;

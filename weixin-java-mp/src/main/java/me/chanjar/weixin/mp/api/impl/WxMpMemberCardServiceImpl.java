@@ -8,13 +8,12 @@ import com.google.gson.reflect.TypeToken;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpMemberCardService;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardActivatedMessage;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUpdateMessage;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUpdateResult;
-import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUserInfoResult;
+import me.chanjar.weixin.mp.bean.membercard.*;
 import me.chanjar.weixin.mp.util.json.WxMpGsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 /**
  * 会员卡相关接口的实现类
@@ -29,7 +28,10 @@ public class WxMpMemberCardServiceImpl implements WxMpMemberCardService {
   private static final String MEMBER_CARD_ACTIVATE = "https://api.weixin.qq.com/card/membercard/activate";
   private static final String MEMBER_CARD_USER_INFO_GET = "https://api.weixin.qq.com/card/membercard/userinfo/get";
   private static final String MEMBER_CARD_UPDATE_USER = "https://api.weixin.qq.com/card/membercard/updateuser";
-
+  private static final String MEMBER_CARD_ADD="https://api.weixin.qq.com/card/create";
+  private static final String MEMBER_CARD_ACTIVATE_SET="https://api.weixin.qq.com/card/membercard/activateuserform/set";
+  private static final String MEMBER_CARD_GET_URL="https://api.weixin.qq.com/card/membercard/activate/geturl";
+  private static final String MEMBER_CARD_USER_INFO_GET_TICKET="https://api.weixin.qq.com/card/membercard/activatetempinfo/get";
   private WxMpService wxMpService;
 
   private static final Gson GSON = new Gson();
@@ -79,6 +81,17 @@ public class WxMpMemberCardServiceImpl implements WxMpMemberCardService {
       }.getType());
   }
 
+  @Override
+  public WxMpMemberCardUserInfoTicketResult getUserInfo(String ticket) throws WxErrorException {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("activate_ticket", ticket);
+    String responseContent = this.getWxMpService().post(MEMBER_CARD_USER_INFO_GET_TICKET, jsonObject.toString());
+    JsonElement tmpJsonElement = new JsonParser().parse(responseContent);
+    return WxMpGsonBuilder.INSTANCE.create().fromJson(tmpJsonElement,
+      new TypeToken<WxMpMemberCardUserInfoTicketResult>() {
+      }.getType());
+  }
+
   /**
    * 当会员持卡消费后，支持开发者调用该接口更新会员信息。会员卡交易后的每次信息变更需通过该接口通知微信，便于后续消息通知及其他扩展功能。
    *
@@ -100,5 +113,43 @@ public class WxMpMemberCardServiceImpl implements WxMpMemberCardService {
     return WxMpGsonBuilder.INSTANCE.create().fromJson(tmpJsonElement,
       new TypeToken<WxMpMemberCardUpdateResult>() {
       }.getType());
+  }
+
+  @Override
+  public WxMpMemberCardAddResult addMemberCard(WxMpMemberCardAddMessage wxMpMemberCardAddMessage) throws WxErrorException {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("card",wxMpMemberCardAddMessage);
+    String responseContent = this.getWxMpService().post(MEMBER_CARD_ADD, GSON.toJson(map));
+    JsonElement tmpJsonElement = new JsonParser().parse(responseContent);
+    return WxMpGsonBuilder.INSTANCE.create().fromJson(tmpJsonElement,
+      new TypeToken<WxMpMemberCardAddResult>() {
+      }.getType());
+  }
+
+  @Override
+  public String activityCardInfoSet( String msg) throws WxErrorException {
+    String responseContent = this.getWxMpService().post(MEMBER_CARD_ACTIVATE_SET, msg);
+    return responseContent;
+  }
+
+  @Override
+  public WxMpMemberCardGetUrlResult getQuickCctivityCardURL(String cardId, String outer_str) throws WxErrorException {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("card_id",cardId);
+    map.put("outer_str",outer_str);
+    String responseContent = this.getWxMpService().post(MEMBER_CARD_GET_URL, GSON.toJson(map));
+    return WxMpGsonBuilder.INSTANCE.create().fromJson(responseContent,
+      new TypeToken<WxMpMemberCardGetUrlResult>() {
+      }.getType());
+
+  }
+
+  @Override
+  public WxMpMemberCardAddResult addMemberCard(String msg) throws WxErrorException{
+    String responseContent = this.getWxMpService().post(MEMBER_CARD_ADD, msg);
+    return WxMpGsonBuilder.INSTANCE.create().fromJson(responseContent,
+      new TypeToken<WxMpMemberCardAddResult>() {
+      }.getType());
+
   }
 }

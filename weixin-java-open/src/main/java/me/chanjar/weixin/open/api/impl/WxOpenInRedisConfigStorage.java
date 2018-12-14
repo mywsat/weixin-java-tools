@@ -9,6 +9,7 @@ import redis.clients.util.Pool;
  * @author <a href="https://github.com/007gzs">007</a>
  */
 public class WxOpenInRedisConfigStorage extends WxOpenInMemoryConfigStorage {
+
   private final static String COMPONENT_VERIFY_TICKET_KEY = "wechat_component_verify_ticket:";
   private final static String COMPONENT_ACCESS_TOKEN_KEY = "wechat_component_access_token:";
 
@@ -93,7 +94,7 @@ public class WxOpenInRedisConfigStorage extends WxOpenInMemoryConfigStorage {
   @Override
   public void updateComponentAccessTokent(String componentAccessToken, int expiresInSeconds) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.setex(this.componentAccessTokenKey, expiresInSeconds - 200, componentAccessToken);
+      jedis.setex(componentAccessTokenKey, expiresInSeconds - 200, componentAccessToken);
     }
   }
 

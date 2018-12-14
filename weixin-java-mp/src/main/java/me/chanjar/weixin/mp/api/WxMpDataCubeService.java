@@ -30,7 +30,8 @@ public interface WxMpDataCubeService {
   String GET_UPSTREAM_MSG_DIST_MONTH = "https://api.weixin.qq.com/datacube/getupstreammsgdistmonth";
   String GET_INTERFACE_SUMMARY = "https://api.weixin.qq.com/datacube/getinterfacesummary";
   String GET_INTERFACE_SUMMARY_HOUR = "https://api.weixin.qq.com/datacube/getinterfacesummaryhour";
-
+  String GET_CARD_CARD_INFO = "https://api.weixin.qq.com/datacube/getcardcardinfo";
+  String GET_MEMBER_CARD_DETAIL = "https://api.weixin.qq.com/datacube/getcardmembercarddetail";
   //*******************用户分析数据接口***********************//
 
   /**
@@ -229,4 +230,6 @@ public interface WxMpDataCubeService {
    */
   List<WxDataCubeInterfaceResult> getInterfaceSummaryHour(Date beginDate, Date endDate) throws WxErrorException;
 
+  List<WxDataCubeCardResult> getInterfaceSummaryCard(Date beginDate, Date endDate,int cond_source,String card_id) throws WxErrorException;
+  List<WxDataCubeCardMemberResult> getInterfaceSummaryMemberCard(Date beginDate, Date endDate,String card_id) throws WxErrorException;
 }
